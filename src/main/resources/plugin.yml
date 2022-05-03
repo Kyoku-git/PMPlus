@@ -1,0 +1,52 @@
+name: PMPlus
+version: '${project.version}'
+main: kyoku.cloud.pmplus.PMPlus
+api-version: 1.18
+authors: [ Kyoku ]
+description: A super customizable messaging plugin
+website: kyoku.cloud
+commands:
+  message:
+    description: Privately message a player
+    permission: pmplus.msg
+    aliases:
+      - pm
+      - msg
+      - whisper
+      - tell
+  togglepms:
+    description: Toggle whether you can receive messages
+    permission: pmplus.toggle
+    aliases:
+      - togglemsgs
+      - togglepm
+      - togglemsg
+      - pmtoggle
+      - msgtoggle
+  socialspy:
+    description: Spy on other players' conversations.
+    permission: pmplus.socialspy
+    aliases:
+      - spy
+  reply:
+    description: Reply to a previous message.
+    permission: pmplus.reply
+    aliases:
+      - r
+
+permissions:
+  pmplus.msg:
+    description: Allows a player to message another player.
+    default: true
+  pmplus.toggle:
+    description: Allows a player to toggle whether they can receive private messages.
+    default: true
+  pmplus.bypass:
+    description: Allows a player to still message players who have their messages off.
+    default: op
+  pmplus.socialspy:
+    description: Allows players to spy on other players' conversations.
+    default: op
+  pmplus.reply:
+    description: Allows players to reply to a previous message
+    default: true
