@@ -1,6 +1,7 @@
 package kyoku.cloud.pmplus.Commands;
 
 import kyoku.cloud.pmplus.PMPlus;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,13 +10,12 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ToggleCommand implements CommandExecutor {
 
-    public static List<UUID> toggled = new ArrayList<>();
+    public static ArrayList<String> toggled = new ArrayList<>();
 
-    public static List<UUID> getToggled() {
+    public static ArrayList<String> getToggled() {
         return toggled;
     }
 
@@ -24,17 +24,19 @@ public class ToggleCommand implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (!toggled.contains(((Player) sender).getUniqueId())) {
-                toggled.add(p.getUniqueId());
-                String msgtoggledoff = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MessagesToggledOff"));
-                msgtoggledoff = msgtoggledoff.replace("%sender%", ((Player) sender).getDisplayName());
-                p.sendMessage(msgtoggledoff);
-            } else {
-                toggled.remove(p.getUniqueId());
+            if (toggled.contains(p.getName())) {
+                toggled.remove(p.getName());
                 String msgtoggledon = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MessagesToggledOn"));
                 msgtoggledon = msgtoggledon.replace("%sender%", ((Player) sender).getDisplayName());
                 p.sendMessage(msgtoggledon);
+            } else {
+                toggled.add(p.getName());
+                String msgtoggledoff = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MessagesToggledOff"));
+                msgtoggledoff = msgtoggledoff.replace("%sender%", ((Player) sender).getDisplayName());
+                p.sendMessage(msgtoggledoff);
             }
+        } else {
+            Bukkit.getServer().getLogger().info(ChatColor.RED + "Only players can use this command.");
         }
 
         return true;

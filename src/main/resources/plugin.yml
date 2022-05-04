@@ -5,6 +5,7 @@ api-version: 1.18
 authors: [ Kyoku ]
 description: A super customizable messaging plugin
 website: kyoku.cloud
+softdepend: [PlaceholderAPI]
 commands:
   message:
     description: Privately message a player
@@ -20,9 +21,6 @@ commands:
     aliases:
       - togglemsgs
       - togglepm
-      - togglemsg
-      - pmtoggle
-      - msgtoggle
   socialspy:
     description: Spy on other players' conversations.
     permission: pmplus.socialspy

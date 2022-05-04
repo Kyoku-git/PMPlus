@@ -1,20 +1,22 @@
 package kyoku.cloud.pmplus.Commands;
 
 import kyoku.cloud.pmplus.PMPlus;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MessageCommand implements CommandExecutor {
 
     PMPlus plugin;
-    public List<UUID> toggled = ToggleCommand.getToggled();
+    public List<String> toggled = ToggleCommand.getToggled();
 
     public MessageCommand(PMPlus pmPlus) {
         plugin = pmPlus;
@@ -28,9 +30,9 @@ public class MessageCommand implements CommandExecutor {
                 if (Bukkit.getOfflinePlayer(args[0]).getPlayer() != null) {
                     if (sender.hasPermission("pmplus.msg")) {
                         Player recipient = Bukkit.getOfflinePlayer(args[0]).getPlayer();
-                        if (!toggled.contains(recipient) && !sender.hasPermission("pmplus.bypass")) {
+                        if (!(toggled.contains(recipient.getName())) && sender.hasPermission("pmplus.bypass")) {
                             // checks config to see if players can message themselves
-                            if (((Player) sender).getName() == recipient.getName() && PMPlus.plugin.getConfig().getBoolean("Options.AllowSelfMessage") == true || sender.getName() != recipient.getName()) {
+                            if (((sender.getName() == recipient.getName() && PMPlus.plugin.getConfig().getBoolean("Options.AllowSelfMessage") == true) || (sender.getName() != recipient.getName()))) {
                                 plugin.mM.setReplyTarget((Player) sender, recipient);
 
                                 // set the message
@@ -46,6 +48,9 @@ public class MessageCommand implements CommandExecutor {
                                 msg = msg.replace("%sender%", ((Player) sender).getDisplayName());
                                 msg = msg.replace("%message%", message);
                                 msg = msg.replace("%recipient%", recipient.getDisplayName());
+                                if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                                    msg = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, msg);
+                                }
                                 sender.sendMessage(msg);
 
                                 // send the message to the recipient
@@ -54,6 +59,9 @@ public class MessageCommand implements CommandExecutor {
                                 msgto = msgto.replace("%message%", message);
                                 msgto = msgto.replace("%recipient%", recipient.getDisplayName());
                                 recipient.sendMessage(msgto);
+                                if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                                    msgto = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, msgto);
+                                }
 
                                 // send message to players with social spy
                                 for (Player spy : SocialSpyCommand.getSpies()) {
@@ -63,6 +71,9 @@ public class MessageCommand implements CommandExecutor {
                                         msgspy = msgspy.replace("%message%", message);
                                         msgspy = msgspy.replace("%receiver%", recipient.getDisplayName());
                                         spy.sendMessage(msgspy);
+                                        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                                            msgspy = PlaceholderAPI.setPlaceholders((Player) sender, msgspy);
+                                        }
                                     }
                                 }
                             } else {
@@ -76,6 +87,10 @@ public class MessageCommand implements CommandExecutor {
                             String msgtoggled = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.RecipientMessagesOff"));
                             msgtoggled = msgtoggled.replace("%recipient%", recipient.getDisplayName());
                             msgtoggled = msgtoggled.replace("%sender%", ((Player) sender).getDisplayName());
+                            sender.sendMessage(msgtoggled);
+                            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                                msgtoggled = PlaceholderAPI.setPlaceholders((Player) sender, msgtoggled);
+                            }
                         }
                     } else {
                         // tells sender that they do not have permission
@@ -98,11 +113,6 @@ public class MessageCommand implements CommandExecutor {
         } else if (!(sender instanceof Player)) {
             // sends a message to console with information
             Bukkit.getServer().getLogger().info(ChatColor.RED + "Only players can use this command. " + ChatColor.WHITE + "We plan to implement messages from console in a future update.");
-        } else {
-            String invalidargsmsg = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MessageCommandUsage"));
-            invalidargsmsg = invalidargsmsg.replace("%sender%", ((Player) sender).getDisplayName());
-            invalidargsmsg = invalidargsmsg.replace("%recipient%", args[0]);
-            sender.sendMessage(invalidargsmsg);
         }
         return true;
         }

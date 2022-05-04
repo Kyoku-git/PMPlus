@@ -1,9 +1,6 @@
 package kyoku.cloud.pmplus;
 
-import kyoku.cloud.pmplus.Commands.MessageCommand;
-import kyoku.cloud.pmplus.Commands.ReplyCommand;
-import kyoku.cloud.pmplus.Commands.SocialSpyCommand;
-import kyoku.cloud.pmplus.Commands.ToggleCommand;
+import kyoku.cloud.pmplus.Commands.*;
 import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -28,12 +25,12 @@ public final class PMPlus extends JavaPlugin implements CommandExecutor, Listene
 
     @Override
     public void onEnable() {
+        plugin = this;
         getCommand("message").setExecutor(new MessageCommand(this));
         getCommand("togglepms").setExecutor(new ToggleCommand());
         getCommand("socialspy").setExecutor(new SocialSpyCommand());
         getCommand("reply").setExecutor(new ReplyCommand(this));
         mM = new messageManager(this);
-        plugin = this;
         createFiles();
     }
 
