@@ -30,7 +30,8 @@ public class MessageCommand implements CommandExecutor {
                 if (Bukkit.getOfflinePlayer(args[0]).getPlayer() != null) {
                     if (sender.hasPermission("pmplus.msg")) {
                         Player recipient = Bukkit.getOfflinePlayer(args[0]).getPlayer();
-                        if (!(toggled.contains(recipient.getName())) && sender.hasPermission("pmplus.bypass")) {
+                        Player sendr = (Player) sender;
+                        if (!(toggled.contains(recipient.getName())) || sender.hasPermission("pmplus.bypass")) {
                             // checks config to see if players can message themselves
                             if (((sender.getName() == recipient.getName() && PMPlus.plugin.getConfig().getBoolean("Options.AllowSelfMessage") == true) || (sender.getName() != recipient.getName()))) {
                                 plugin.mM.setReplyTarget((Player) sender, recipient);
@@ -49,7 +50,7 @@ public class MessageCommand implements CommandExecutor {
                                 msg = msg.replace("%message%", message);
                                 msg = msg.replace("%recipient%", recipient.getDisplayName());
                                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                                    msg = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, msg);
+                                    msg = PlaceholderAPI.setPlaceholders((Player) sender, msg);
                                 }
                                 sender.sendMessage(msg);
 
@@ -58,10 +59,10 @@ public class MessageCommand implements CommandExecutor {
                                 msgto = msgto.replace("%sender%", ((Player) sender).getDisplayName());
                                 msgto = msgto.replace("%message%", message);
                                 msgto = msgto.replace("%recipient%", recipient.getDisplayName());
-                                recipient.sendMessage(msgto);
                                 if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                                    msgto = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, msgto);
+                                    msgto = PlaceholderAPI.setPlaceholders(sendr, msgto);
                                 }
+                                recipient.sendMessage(msgto);
 
                                 // send message to players with social spy
                                 for (Player spy : SocialSpyCommand.getSpies()) {
@@ -89,7 +90,7 @@ public class MessageCommand implements CommandExecutor {
                             msgtoggled = msgtoggled.replace("%sender%", ((Player) sender).getDisplayName());
                             sender.sendMessage(msgtoggled);
                             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                                msgtoggled = PlaceholderAPI.setPlaceholders((Player) sender, msgtoggled);
+                                msgtoggled = PlaceholderAPI.setPlaceholders(recipient, msgtoggled);
                             }
                         }
                     } else {

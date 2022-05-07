@@ -34,7 +34,8 @@ public class ReplyCommand implements CommandExecutor {
                 }
                 if (args.length > 0) {
                     Player recipient = plugin.mM.getReplyTarget((Player) sender);
-                    if (sender.hasPermission("pmplus.bypass") && !(toggled.contains(recipient.getName()))) {
+                    Player sendr = (Player) sender;
+                    if (sender.hasPermission("pmplus.bypass") || !(toggled.contains(recipient.getName()))) {
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < args.length; i++) {
                             sb.append(args[i]).append(" ");
@@ -48,7 +49,7 @@ public class ReplyCommand implements CommandExecutor {
                         msg = msg.replace("%message%", message);
                         msg = msg.replace("%recipient%", recipient.getDisplayName());
                         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                            msg = PlaceholderAPI.setPlaceholders((Player) sender, msg);
+                            msg = PlaceholderAPI.setPlaceholders(recipient, msg);
                         }
                         sender.sendMessage(msg);
 
@@ -58,9 +59,9 @@ public class ReplyCommand implements CommandExecutor {
                         msgto = msgto.replace("%message%", message);
                         msgto = msgto.replace("%recipient%", recipient.getDisplayName());
                         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                            msgto = PlaceholderAPI.setPlaceholders((Player) sender, msgto);
+                            msgto = PlaceholderAPI.setPlaceholders(sendr, msgto);
                         }
-                        sender.sendMessage(msgto);
+                        recipient.sendMessage(msgto);
 
                         // send message to players with social spy
                         for (Player spy : SocialSpyCommand.getSpies()) {
@@ -70,9 +71,6 @@ public class ReplyCommand implements CommandExecutor {
                                 msgspy = msgspy.replace("%message%", message);
                                 msgspy = msgspy.replace("%receiver%", recipient.getDisplayName());
                                 spy.sendMessage(msgspy);
-                                if (PMPlus.plugin.getConfig().getBoolean("Options.PlaySound") == true) {
-                                    recipient.playSound(recipient.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-                                }
                             }
                         }
                     } else {
