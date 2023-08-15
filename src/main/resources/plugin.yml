@@ -42,6 +42,15 @@ commands:
       - msgmute
       - mmute
       - pmute
+  togglesounds:
+    description: Toggle whether you can receive message sounds
+    permission: pmplus.togglesounds
+    aliases:
+      - togglesound
+      - togglesoundonmessage
+      - togglesoundonmsg
+      - togglesoundonpm
+      - togglesoundonpms
 
 permissions:
   pmplus.msg:
@@ -62,3 +71,6 @@ permissions:
   pmplus.mute:
     description: Allows staff to mute players from sending messages
     default: op
+  pmplus.togglesounds:
+    description: Allows a player to toggle whether they can receive message sounds
+    default: true

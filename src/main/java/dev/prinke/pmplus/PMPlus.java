@@ -30,6 +30,7 @@ public final class PMPlus extends JavaPlugin implements CommandExecutor, Listene
         getCommand("socialspy").setExecutor(new SocialSpyCommand());
         getCommand("reply").setExecutor(new ReplyCommand(this));
         getCommand("pmmute").setExecutor(new ReplyCommand(this));
+        getCommand("togglesounds").setExecutor(new SoundToggleCommand());
         mM = new messageManager(this);
         createFiles();
     }
