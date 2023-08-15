@@ -1,4 +1,4 @@
-package kyoku.cloud.pmplus;
+package dev.prinke.pmplus;
 
 import org.bukkit.entity.Player;
 

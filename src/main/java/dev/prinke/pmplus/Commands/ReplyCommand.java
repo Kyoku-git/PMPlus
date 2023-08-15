@@ -1,10 +1,10 @@
-package kyoku.cloud.pmplus.Commands;
+package dev.prinke.pmplus.Commands;
 
-import kyoku.cloud.pmplus.PMPlus;
+import de.myzelyam.api.vanish.VanishAPI;
+import dev.prinke.pmplus.PMPlus;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,11 +12,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ReplyCommand implements CommandExecutor {
 
     PMPlus plugin;
     public List<String> toggled = ToggleCommand.getToggled();
+    public List<UUID> soundtoggled = SoundToggleCommand.getSoundtoggled();
 
     public ReplyCommand(PMPlus pmPlus) {
         plugin = pmPlus;
@@ -26,6 +28,26 @@ public class ReplyCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (sender.hasPermission("pmplus.reply")) {
+
+                // check if super vanish or premium vanish is enabled
+                boolean hasVanishPlugin = false;
+                if (Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish")) {
+                    hasVanishPlugin = true;
+                }
+
+                // check if the recipient is vanished
+                if (PMPlus.plugin.getConfig().getBoolean("Options.VanishSupport") == true) {
+                    if (hasVanishPlugin) {
+                        if (VanishAPI.isInvisible(plugin.mM.getReplyTarget((Player) sender)) && !(sender.hasPermission("pmplus.bypass"))) {
+                            String cannotfind = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.NoReplyTarget"));
+                            cannotfind = cannotfind.replace("%sender%", ((Player) sender).getDisplayName());
+                            cannotfind = cannotfind.replace("%recipient%", args[0]);
+                            sender.sendMessage(cannotfind);
+                            return true;
+                        }
+                    }
+                }
+
                 if (plugin.mM.getReplyTarget((Player) sender) == null) {
                     String noreplytarget = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.NoReplyTarget"));
                     noreplytarget = noreplytarget.replace("%sender%", ((Player) sender).getDisplayName());
@@ -33,7 +55,7 @@ public class ReplyCommand implements CommandExecutor {
                     return true;
                 }
                 if (args.length > 0) {
-                    Player recipient = plugin.mM.getReplyTarget((Player) sender);
+                    Player recipient = plugin.mM.getReplyTarget( (Player) sender);
                     Player sendr = (Player) sender;
                     if (sender.hasPermission("pmplus.bypass") || !(toggled.contains(recipient.getName()))) {
                         StringBuilder sb = new StringBuilder();
@@ -43,7 +65,7 @@ public class ReplyCommand implements CommandExecutor {
                         sb.setLength(sb.length() - 1);
                         String message = sb.toString();
 
-                        // send the message to the recipient
+                        // send the message to the sender
                         String msg = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MessageToSender"));
                         msg = msg.replace("%sender%", ((Player) sender).getDisplayName());
                         msg = msg.replace("%message%", message);
@@ -53,7 +75,7 @@ public class ReplyCommand implements CommandExecutor {
                         }
                         sender.sendMessage(msg);
 
-                        // send message to players with social spy
+                        // send message to the recipient
                         String msgto = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MessageToRecipient"));
                         msgto = msgto.replace("%sender%", ((Player) sender).getDisplayName());
                         msgto = msgto.replace("%message%", message);
@@ -62,6 +84,9 @@ public class ReplyCommand implements CommandExecutor {
                             msgto = PlaceholderAPI.setPlaceholders(sendr, msgto);
                         }
                         recipient.sendMessage(msgto);
+                        if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(soundtoggled.contains(recipient.getUniqueId()))) {
+                            recipient.playSound(recipient.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+                        }
 
                         // send message to players with social spy
                         for (Player spy : SocialSpyCommand.getSpies()) {

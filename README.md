@@ -1,10 +1,7 @@
 ## Information
 PMPlus is an advanced messaging plugin that aims to be fully customizable and user-friendly.
 ### Support
-The following links can help you with any problems. If you cannot find an answer in our docs, join our Discord server to request support. If you encounter a bug or want to suggest something, use our feedback page.
-- [Documentation](https://docs.crowned.dev/plugins/pm+)
-- [Discord Server](https://discord.crowned.dev)
-- [Feedback Page](https://feedback.crowned.dev)
+If you need support, please contact me on [SpigotMC](https://www.spigotmc.org/members/prinke.333972/) or [create an issue](https://github.com/prinkee/PMPlus/issues/new) on GitHub. I will try to respond as soon as possible.
 
 ## Features
 ### Current Features
@@ -32,13 +29,13 @@ The following links can help you with any problems. If you cannot find an answer
 # ██████╔╝██╔████╔██║██████╔╝██║     ██║   ██║╚█████╗
 # ██╔═══╝ ██║╚██╔╝██║██╔═══╝ ██║     ██║   ██║ ╚═══██╗
 # ██║     ██║ ╚═╝ ██║██║     ███████╗╚██████╔╝██████╔╝
-# ╚═╝     ╚═╝     ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═════╝
-# Plugin by Kyoku
-
+# ╚═╝     ╚═╝     ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═════╝ v1.0.3
+# Plugin by prinke.dev
 
 Options:
   AllowSelfMessage: false
-  # more options will come in future updates
+  SoundOnMessage: true
+  VanishSupport: true
 
 Messages:
   MessageToSender: "&e(To &6%recipient%&e) &f%message%"
@@ -49,10 +46,18 @@ Messages:
   MessagesToggledOff: "&cYou will no longer receive messages."
   SocialSpyEnabled: "&aYou have enabled social spy."
   SocialSpyDisabled: "&cYou have disabled social spy."
+  IndividualSpyEnabled: "&cYou are now spying on %player%."
   SocialSpyFormat: "&e[SPY] (&6%sender% &eto &6%recipient%&e) &f%message%"
   MessageCommandUsage: "&cInvalid arguments: &7/msg <player> <message>"
   ReplyCommandUsage: "&cInvalid arguments: &7/r <message>"
   NoPermission: "&cYou do not have permission to use that command."
   PlayerNotFound: "&cThe player %recipient% could not be found."
   CannotMessageSelf: "&cYou cannot message yourself!"
+  CannotMutePlayer: "&cYou cannot mute &e%player%&c."
+  MutedPlayer: "&cYou have muted &e%player%"
+  MuteMessage: "&e%sender% &chas message-muted you for &e%reason%"
+  UnmutedPlayer: "&aYou have unmuted &e%player%"
+  SoundToggleOn: "&aYou will now receive message sounds."
+  SoundToggleOff: "&cYou will no longer receive message sounds."
+  SoundDisabled: "&cMessage sound is currently disabled."
   ```

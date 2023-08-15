@@ -1,11 +1,14 @@
 name: PMPlus
-version: '${project.version}'
-main: kyoku.cloud.pmplus.PMPlus
+version: 1.1.0
+main: dev.prinke.pmplus.PMPlus
 api-version: 1.18
-authors: [ Kyoku ]
+authors: [ Prinke ]
 description: A super customizable messaging plugin
-website: kyoku.cloud
-softdepend: [PlaceholderAPI]
+website: prinke.dev
+softdepend:
+  - PlaceholderAPI
+  - SuperVanish
+  - PremiumVanish
 commands:
   message:
     description: Privately message a player
@@ -15,6 +18,7 @@ commands:
       - msg
       - whisper
       - tell
+      - w
   togglepms:
     description: Toggle whether you can receive messages
     permission: pmplus.toggle
@@ -31,6 +35,13 @@ commands:
     permission: pmplus.reply
     aliases:
       - r
+  pmmute:
+    description: Prevent players from sending messages
+    permission: pmplus.mute
+    aliases:
+      - msgmute
+      - mmute
+      - pmute
 
 permissions:
   pmplus.msg:
@@ -48,3 +59,6 @@ permissions:
   pmplus.reply:
     description: Allows players to reply to a previous message
     default: true
+  pmplus.mute:
+    description: Allows staff to mute players from sending messages
+    default: op

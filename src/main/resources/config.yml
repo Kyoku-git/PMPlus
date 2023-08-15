@@ -3,13 +3,13 @@
 # ██████╔╝██╔████╔██║██████╔╝██║     ██║   ██║╚█████╗
 # ██╔═══╝ ██║╚██╔╝██║██╔═══╝ ██║     ██║   ██║ ╚═══██╗
 # ██║     ██║ ╚═╝ ██║██║     ███████╗╚██████╔╝██████╔╝
-# ╚═╝     ╚═╝     ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═════╝
-# Plugin by Kyoku
-
+# ╚═╝     ╚═╝     ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═════╝ v1.1.0
+# Plugin by prinke.dev
 
 Options:
   AllowSelfMessage: false
-  # more options will come in future updates
+  SoundOnMessage: true
+  VanishSupport: true
 
 Messages:
   MessageToSender: "&e(To &6%recipient%&e) &f%message%"
@@ -20,9 +20,17 @@ Messages:
   MessagesToggledOff: "&cYou will no longer receive messages."
   SocialSpyEnabled: "&aYou have enabled social spy."
   SocialSpyDisabled: "&cYou have disabled social spy."
+  IndividualSpyEnabled: "&cYou are now spying on %player%."
   SocialSpyFormat: "&e[SPY] (&6%sender% &eto &6%recipient%&e) &f%message%"
   MessageCommandUsage: "&cInvalid arguments: &7/msg <player> <message>"
   ReplyCommandUsage: "&cInvalid arguments: &7/r <message>"
   NoPermission: "&cYou do not have permission to use that command."
   PlayerNotFound: "&cThe player %recipient% could not be found."
   CannotMessageSelf: "&cYou cannot message yourself!"
+  CannotMutePlayer: "&cYou cannot mute &e%player%&c."
+  MutedPlayer: "&cYou have muted &e%player%"
+  MuteMessage: "&e%sender% &chas message-muted you for &e%reason%"
+  UnmutedPlayer: "&aYou have unmuted &e%player%"
+  SoundToggleOn: "&aYou will now receive message sounds."
+  SoundToggleOff: "&cYou will no longer receive message sounds."
+  SoundDisabled: "&cMessage sound is currently disabled."

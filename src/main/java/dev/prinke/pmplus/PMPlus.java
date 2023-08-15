@@ -1,6 +1,6 @@
-package kyoku.cloud.pmplus;
+package dev.prinke.pmplus;
 
-import kyoku.cloud.pmplus.Commands.*;
+import dev.prinke.pmplus.Commands.*;
 import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +29,7 @@ public final class PMPlus extends JavaPlugin implements CommandExecutor, Listene
         getCommand("togglepms").setExecutor(new ToggleCommand());
         getCommand("socialspy").setExecutor(new SocialSpyCommand());
         getCommand("reply").setExecutor(new ReplyCommand(this));
+        getCommand("pmmute").setExecutor(new ReplyCommand(this));
         mM = new messageManager(this);
         createFiles();
     }

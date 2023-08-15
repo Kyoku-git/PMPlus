@@ -1,6 +1,6 @@
-package kyoku.cloud.pmplus.Commands;
+package dev.prinke.pmplus.Commands;
 
-import kyoku.cloud.pmplus.PMPlus;
+import dev.prinke.pmplus.PMPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

@@ -1,6 +1,6 @@
-package kyoku.cloud.pmplus.Commands;
+package dev.prinke.pmplus.Commands;
 
-import kyoku.cloud.pmplus.PMPlus;
+import dev.prinke.pmplus.PMPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ToggleCommand implements CommandExecutor {
 
