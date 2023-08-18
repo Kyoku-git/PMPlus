@@ -98,7 +98,7 @@ public class MessageCommand implements CommandExecutor {
                                         String msgspy = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.SocialSpyFormat"));
                                         msgspy = msgspy.replace("%sender%", ((Player) sender).getDisplayName());
                                         msgspy = msgspy.replace("%message%", message);
-                                        msgspy = msgspy.replace("%receiver%", recipient.getDisplayName());
+                                        msgspy = msgspy.replace("%recipient%", recipient.getDisplayName());
                                         spy.sendMessage(msgspy);
                                         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                                             msgspy = PlaceholderAPI.setPlaceholders((Player) sender, msgspy);
@@ -108,7 +108,7 @@ public class MessageCommand implements CommandExecutor {
                             } else {
                                 String cannotmsgself = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.CannotMessageSelf"));
                                 cannotmsgself = cannotmsgself.replace("%sender%", ((Player) sender).getDisplayName());
-                                cannotmsgself = cannotmsgself.replace("%receiver%", recipient.getDisplayName());
+                                cannotmsgself = cannotmsgself.replace("%recipient%", recipient.getDisplayName());
                                 sender.sendMessage(cannotmsgself);
                             }
                         } else {

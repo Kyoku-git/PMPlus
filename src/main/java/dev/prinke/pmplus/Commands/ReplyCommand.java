@@ -94,7 +94,7 @@ public class ReplyCommand implements CommandExecutor {
                                 String msgspy = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("SocialSpyFormat"));
                                 msgspy = msgspy.replace("%sender%", ((Player) sender).getDisplayName());
                                 msgspy = msgspy.replace("%message%", message);
-                                msgspy = msgspy.replace("%receiver%", recipient.getDisplayName());
+                                msgspy = msgspy.replace("%recipient%", recipient.getDisplayName());
                                 spy.sendMessage(msgspy);
                             }
                         }
