@@ -18,7 +18,6 @@ import java.util.List;
 public final class PMPlus extends JavaPlugin implements CommandExecutor, Listener {
 
     public messageManager mM;
-    @Getter static List<Player> spies = new ArrayList<Player>();
 
     public static PMPlus plugin;
 

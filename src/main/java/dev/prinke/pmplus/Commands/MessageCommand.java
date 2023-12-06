@@ -11,20 +11,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.UUID;
-
 public class MessageCommand implements CommandExecutor {
 
     PMPlus plugin;
-    public List<String> toggled = ToggleCommand.getToggled();
-    public List<UUID> soundtoggled = SoundToggleCommand.getSoundtoggled();
 
     public MessageCommand(PMPlus pmPlus) {
         plugin = pmPlus;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -55,7 +49,15 @@ public class MessageCommand implements CommandExecutor {
                             }
                         }
 
-                        if (!(toggled.contains(recipient.getName())) || sender.hasPermission("pmplus.bypass")) {
+                        // check to see if the sender is muted
+                        if (sendr.hasMetadata("muted")) {
+                            String muted = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.Muted"));
+                            muted = muted.replace("%sender%", ((Player) sender).getDisplayName());
+                            sender.sendMessage(muted);
+                            return true;
+                        }
+
+                        if (!(recipient.hasMetadata("messages_off")) || sender.hasPermission("pmplus.bypass")) {
 
                             // checks config to see if players can message themselves
                             if (((sender.getName() == recipient.getName() && PMPlus.plugin.getConfig().getBoolean("Options.AllowSelfMessage") == true) || (sender.getName() != recipient.getName()))) {
@@ -88,27 +90,29 @@ public class MessageCommand implements CommandExecutor {
                                     msgto = PlaceholderAPI.setPlaceholders(sendr, msgto);
                                 }
                                 recipient.sendMessage(msgto);
-                                if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(soundtoggled.contains(recipient.getUniqueId()))) {
+                                if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(recipient.hasMetadata("sound_off"))) {
                                     recipient.playSound(recipient.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
                                 }
 
                                 // send message to players with social spy
-                                for (Player spy : SocialSpyCommand.getSpies()) {
-                                    if (!spy.getName().equals(sender.getName()) && !spy.getName().equals(recipient.getName())) {
-                                        String msgspy = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.SocialSpyFormat"));
-                                        msgspy = msgspy.replace("%sender%", ((Player) sender).getDisplayName());
-                                        msgspy = msgspy.replace("%message%", message);
-                                        msgspy = msgspy.replace("%recipient%", recipient.getDisplayName());
-                                        spy.sendMessage(msgspy);
-                                        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                                            msgspy = PlaceholderAPI.setPlaceholders((Player) sender, msgspy);
+                                for (Player spy : Bukkit.getOnlinePlayers()) {
+                                    if (spy.hasMetadata("message_spy")) {
+                                        if (!spy.getName().equals(sender.getName()) && !spy.getName().equals(recipient.getName())) {
+                                            String msgspy = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.SocialSpyFormat"));
+                                            msgspy = msgspy.replace("%sender%", ((Player) sender).getDisplayName());
+                                            msgspy = msgspy.replace("%message%", message);
+                                            msgspy = msgspy.replace("%receiver%", recipient.getDisplayName());
+                                            spy.sendMessage(msgspy);
+                                            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                                                msgspy = PlaceholderAPI.setPlaceholders((Player) sender, msgspy);
+                                            }
                                         }
                                     }
                                 }
                             } else {
                                 String cannotmsgself = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.CannotMessageSelf"));
                                 cannotmsgself = cannotmsgself.replace("%sender%", ((Player) sender).getDisplayName());
-                                cannotmsgself = cannotmsgself.replace("%recipient%", recipient.getDisplayName());
+                                cannotmsgself = cannotmsgself.replace("%receiver%", recipient.getDisplayName());
                                 sender.sendMessage(cannotmsgself);
                             }
                         } else {
@@ -140,6 +144,8 @@ public class MessageCommand implements CommandExecutor {
                 sender.sendMessage(invalidargsmsg);
             }
         } else if (!(sender instanceof Player)) {
+            // if the sender is not from a player
+
             // get the recipient
             Player recipient = Bukkit.getOfflinePlayer(args[0]).getPlayer();
 
@@ -172,7 +178,7 @@ public class MessageCommand implements CommandExecutor {
                     msgto = PlaceholderAPI.setPlaceholders(recipient, msgto);
                 }
                 recipient.sendMessage(msgto);
-                if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(soundtoggled.contains(recipient.getUniqueId()))) {
+                if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(recipient.hasMetadata("sound_off"))) {
                     recipient.playSound(recipient.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
                 }
 

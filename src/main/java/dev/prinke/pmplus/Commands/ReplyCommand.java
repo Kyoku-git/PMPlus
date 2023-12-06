@@ -11,14 +11,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-import java.util.UUID;
-
 public class ReplyCommand implements CommandExecutor {
 
     PMPlus plugin;
-    public List<String> toggled = ToggleCommand.getToggled();
-    public List<UUID> soundtoggled = SoundToggleCommand.getSoundtoggled();
 
     public ReplyCommand(PMPlus pmPlus) {
         plugin = pmPlus;
@@ -48,6 +43,14 @@ public class ReplyCommand implements CommandExecutor {
                     }
                 }
 
+                // check to see if the sender if muted
+                if (((Player) sender).hasMetadata("muted")) {
+                    String muted = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.Muted"));
+                    muted = muted.replace("%sender%", ((Player) sender).getDisplayName());
+                    sender.sendMessage(muted);
+                    return true;
+                }
+
                 if (plugin.mM.getReplyTarget((Player) sender) == null) {
                     String noreplytarget = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.NoReplyTarget"));
                     noreplytarget = noreplytarget.replace("%sender%", ((Player) sender).getDisplayName());
@@ -57,7 +60,7 @@ public class ReplyCommand implements CommandExecutor {
                 if (args.length > 0) {
                     Player recipient = plugin.mM.getReplyTarget( (Player) sender);
                     Player sendr = (Player) sender;
-                    if (sender.hasPermission("pmplus.bypass") || !(toggled.contains(recipient.getName()))) {
+                    if (sender.hasPermission("pmplus.bypass") || !(recipient.hasMetadata("messages_off"))) {
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < args.length; i++) {
                             sb.append(args[i]).append(" ");
@@ -84,18 +87,20 @@ public class ReplyCommand implements CommandExecutor {
                             msgto = PlaceholderAPI.setPlaceholders(sendr, msgto);
                         }
                         recipient.sendMessage(msgto);
-                        if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(soundtoggled.contains(recipient.getUniqueId()))) {
+                        if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage") == true && !(recipient.hasMetadata("sound_off"))) {
                             recipient.playSound(recipient.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
                         }
 
                         // send message to players with social spy
-                        for (Player spy : SocialSpyCommand.getSpies()) {
-                            if (!spy.getName().equals(sender.getName()) && !spy.getName().equals(recipient.getName())) {
-                                String msgspy = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("SocialSpyFormat"));
-                                msgspy = msgspy.replace("%sender%", ((Player) sender).getDisplayName());
-                                msgspy = msgspy.replace("%message%", message);
-                                msgspy = msgspy.replace("%recipient%", recipient.getDisplayName());
-                                spy.sendMessage(msgspy);
+                        for (Player spy : Bukkit.getOnlinePlayers()) {
+                            if (spy.hasMetadata("message_spy")) {
+                                if (!spy.getName().equals(sender.getName()) && !spy.getName().equals(recipient.getName())) {
+                                    String msgspy = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("SocialSpyFormat"));
+                                    msgspy = msgspy.replace("%sender%", ((Player) sender).getDisplayName());
+                                    msgspy = msgspy.replace("%message%", message);
+                                    msgspy = msgspy.replace("%receiver%", recipient.getDisplayName());
+                                    spy.sendMessage(msgspy);
+                                }
                             }
                         }
                     } else {

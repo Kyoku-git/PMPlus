@@ -3,8 +3,8 @@
 # ██████╔╝██╔████╔██║██████╔╝██║     ██║   ██║╚█████╗
 # ██╔═══╝ ██║╚██╔╝██║██╔═══╝ ██║     ██║   ██║ ╚═══██╗
 # ██║     ██║ ╚═╝ ██║██║     ███████╗╚██████╔╝██████╔╝
-# ╚═╝     ╚═╝     ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═════╝ v1.1.0
-# Plugin by prinke.dev
+# ╚═╝     ╚═╝     ╚═╝╚═╝     ╚══════╝ ╚═════╝ ╚═════╝ v1.0.3
+# Plugin by Prinke
 
 Options:
   AllowSelfMessage: false
@@ -30,6 +30,7 @@ Messages:
   CannotMutePlayer: "&cYou cannot mute &e%player%&c."
   MutedPlayer: "&cYou have muted &e%player%"
   MuteMessage: "&e%sender% &chas message-muted you for &e%reason%"
+  Muted: "&cYou cannot message players while you are muted."
   UnmutedPlayer: "&aYou have unmuted &e%player%"
   SoundToggleOn: "&aYou will now receive message sounds."
   SoundToggleOff: "&cYou will no longer receive message sounds."

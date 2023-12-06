@@ -8,29 +8,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.UUID;
+import org.bukkit.metadata.FixedMetadataValue;
 
 public class MuteCommand implements CommandExecutor {
 
-    public static ArrayList<UUID> muted = new ArrayList<>();
-
-    public static ArrayList<UUID> getToggled() {
-        return muted;
-    }
-
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             if (p.hasPermission("pmplus.mute")) {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (!(target.hasPermission("pmplus.bypass"))) {
-                    if (!muted.contains(target.getUniqueId())) {
-                        muted.add(target.getUniqueId());
+                    if (!target.hasMetadata("muted")) {
+                        target.setMetadata("muted", new FixedMetadataValue(PMPlus.plugin, true));
                         // send message to muter
                         String mute = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.MutedPlayer"));
                         mute = mute.replace("%target%", target.getDisplayName());
@@ -58,7 +48,7 @@ public class MuteCommand implements CommandExecutor {
                         }
                         sender.sendMessage(muted);
                     } else {
-                        muted.remove(target.getUniqueId());
+                        p.removeMetadata("muted", PMPlus.plugin);
                         String unmute = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.UnmutedPlayer"));
                         unmute = unmute.replace("%player%", target.getDisplayName());
                         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {

@@ -6,31 +6,23 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 public class SoundToggleCommand implements CommandExecutor {
-
-    public static ArrayList<UUID> soundtoggled = new ArrayList<>();
-
-    public static ArrayList<UUID> getSoundtoggled() {
-        return soundtoggled;
-    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             if (PMPlus.plugin.getConfig().getBoolean("Options.SoundOnMessage")) {
-                if (soundtoggled.contains(p.getUniqueId())) {
-                    soundtoggled.remove(p.getUniqueId());
+                if (p.hasMetadata("sound_off")) {
+                    p.removeMetadata("sound_off", PMPlus.plugin);
                     String soundtoggledon = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.SoundToggledOn"));
                     soundtoggledon = soundtoggledon.replace("%sender%", ((Player) sender).getDisplayName());
                     p.sendMessage(soundtoggledon);
                 } else {
-                    soundtoggled.add(p.getUniqueId());
+                    p.setMetadata("sound_off", new FixedMetadataValue(PMPlus.plugin, true));
                     String soundtoggledoff = ChatColor.translateAlternateColorCodes('&', PMPlus.plugin.getConfig().getString("Messages.SoundToggledOff"));
                     soundtoggledoff = soundtoggledoff.replace("%sender%", ((Player) sender).getDisplayName());
                     p.sendMessage(soundtoggledoff);
